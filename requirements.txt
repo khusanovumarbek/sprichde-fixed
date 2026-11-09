@@ -1,0 +1,2 @@
+# Loyiha faqat Python stdlib'idan foydalanadi — tashqi kutubxonalar yo'q.
+# Render/Railway kabi xizmatlar Python loyihasini tanishi uchun bo'sh/kutubxonasiz fayl yetarli.

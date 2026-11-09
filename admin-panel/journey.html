@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f8fc">
+<title>SprichDe · 91 kunlik sayohat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="auth.js"></script>
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="application-name" content="SprichDe">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SprichDe">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<script src="pwa.js" defer></script>
+<link rel="stylesheet" href="theme.css">
+<style>
+:root{font-family:Inter,"Segoe UI",Arial,sans-serif;--blue:var(--primary);--blue-dark:var(--primary-2);--muted:#788196;--line:#e9ebf2;--soft:#e7efff;--shadow:0 10px 26px #1d2b4b0f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text)}
+.topbar{height:60px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:5}
+.back{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;font-size:18px;text-decoration:none;color:var(--text)}
+.topbar b{font-size:16px;font-weight:800}
+.wrap{max-width:520px;margin:0 auto;padding:22px 20px 60px}
+.intro{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border-radius:22px;padding:22px;box-shadow:var(--shadow)}
+.intro small{font-size:10.5px;font-weight:800;letter-spacing:2px;color:#ffffffcc}
+.intro b{display:block;font-size:22px;font-weight:800;margin-top:6px}
+.intro p{margin:6px 0 0;font-size:12.5px;color:#ffffffd9}
+.days{margin-top:22px;display:grid;gap:14px}
+.day{display:flex;align-items:center;gap:17px;padding:17px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.day .d-num{width:44px;height:44px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-weight:800;font-size:14px;color:var(--blue);flex:none}
+.day .d-body{flex:1;min-width:0}
+.day .d-body b{display:block;font-size:14px;font-weight:700}
+.day .d-body small{font-size:11.5px;color:var(--muted)}
+.day .d-state{font-size:11px;font-weight:800;padding:5px 10px;border-radius:20px;flex:none}
+.day.done{border-color:#bfe6cb}
+html[data-theme="dark"] .day.done{border-color:#2c5c3c}
+.day.done .d-num{background:#e7f6ec;color:#1d9a52}
+html[data-theme="dark"] .day.done .d-num{background:#1d3a28;color:#57d18a}
+.day.done .d-state{background:#e7f6ec;color:#1d9a52}
+html[data-theme="dark"] .day.done .d-state{background:#1d3a28;color:#57d18a}
+.day .d-state.locked{background:var(--surface-2);color:var(--muted)}
+.note{margin-top:18px;font-size:11.5px;color:var(--muted);line-height:1.6;text-align:center}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="app.html">‹</a>
+  <b>91 kunlik sayohat</b>
+</header>
+
+<div class="wrap">
+  <div class="intro">
+    <small>SAYOHAT</small>
+    <b>91 kunlik sayohat</b>
+    <p>Har kuni bir qadam — katta natija sari. Sinov darsini o‘tib, sayohatni boshlang.</p>
+    <div class="j-count" id="journeyCount">0 / 91 kun</div>
+  </div>
+
+  <div class="days" id="dayList"></div>
+
+  <p class="note">Sahifa tayyorlanmoqda — keyingi kunlar bosqichma-bosqich qo‘shiladi.</p>
+</div>
+
+<script>
+const TOTAL_DAYS = 91;
+const lessonTitles = [
+  'Salomlashish — Hallo, Guten Tag',
+  'Kundalik tanishuv — Wie heißt du?',
+  'Kafe va buyurtma — Ich möchte…',
+  'Oila — die Familie',
+];
+
+function paintDays(completedDays) {
+  const list = document.getElementById('dayList');
+  const done = Array.isArray(completedDays) ? completedDays : [];
+  list.innerHTML = lessonTitles.map((title, i) => {
+    const n = i + 1;
+    const isDone = done.includes(n);
+    return `
+      <div class="day ${isDone ? 'done' : ''}">
+        <span class="d-num">${isDone ? '✓' : n}</span>
+        <span class="d-body"><b>${title}</b><small>${n}-kun</small></span>
+        <span class="d-state ${isDone ? '' : 'locked'}">${isDone ? 'O‘tilgan' : 'Yopiq'}</span>
+      </div>`;
+  }).join('');
+  document.getElementById('journeyCount').textContent = done.length + ' / ' + TOTAL_DAYS + ' kun';
+}
+
+(async function initJourney() {
+  const me = await guard('student');
+  if (!me) return;
+  try {
+    const data = await authFetch('/api/progress');
+    paintDays(data.completedDays);
+  } catch {
+    paintDays([]);
+  }
+})();
+</script>
+</body>
+</html>

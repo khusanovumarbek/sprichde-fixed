@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f8fc">
+<title>SprichDe · Admin</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* --- Admin panel parolsiz ochiladi (demo rejim) --- */
+
+  /* --- To'lov ustuni --- */
+  .students-table{min-width:860px}
+  .pay-cell{min-width:150px}
+  .tag.bad{background:#fdecea;color:#b03a2e}
+  .pay-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .mini{border:1px solid #e2e6ee;background:#fff;color:#5c6678;border-radius:8px;
+    padding:5px 9px;font:inherit;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap}
+  .mini:hover{background:#f5f7fb}
+  .mini.ok{border-color:#bfe3cd;background:#eef8f1;color:#2c7a4b}
+  .mini.ok:hover{background:#e2f3e8}
+  .mini.bad{border-color:#f2d3ce;background:#fdf1ef;color:#a83a2c}
+  .mini.bad:hover{background:#fbe6e2}
+  .mini:disabled{opacity:.55;cursor:not-allowed}
+  .pay-overview{font-size:13px;line-height:1.65;color:#505b70;margin:4px 0 14px}
+</style>
+</head>
+<body>
+
+<!-- ==================== ADMIN PANEL ==================== -->
+<div class="shell" id="adminApp">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#overview"><span class="brand-icon">S<span>.</span></span><span><b>SprichDe</b><small>ADMIN PANEL</small></span></a>
+    <div class="caption">ISH MAYDONI</div>
+    <nav class="nav" aria-label="Asosiy navigatsiya">
+      <button class="nav-item active" data-page="overview"><i>◫</i>Umumiy ko‘rinish</button>
+      <button class="nav-item" data-page="lessons"><i>▤</i>Darslar <em id="lessonCount">04</em></button>
+      <button class="nav-item" data-page="students"><i>♙</i>O‘quvchilar</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <section class="help"><b>Yordam kerakmi?</b><p>Kontent boshqaruvi bo‘yicha qo‘llanma.</p><button id="helpButton">Qo‘llanmani ochish ↗</button></section>
+      <div class="profile">
+        <span class="avatar" id="adminAvatar">AS</span>
+        <span><b id="adminName">Admin</b><small>Administrator</small></span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-button menu-toggle" id="menuToggle" aria-label="Menyuni ochish">☰</button>
+      <div class="crumb">SprichDe <span>/</span> <b id="breadcrumbCurrent">Umumiy ko‘rinish</b></div>
+      <div class="top-right">
+        <span id="todayDate"></span>
+        <button class="icon-button" id="notificationButton" aria-label="Bildirishnomalar">♧<i></i></button>
+        <span class="avatar" id="topAvatar">AS</span>
+      </div>
+    </header>
+    <div class="content" id="pageContent"></div>
+    <footer>© 2026 SprichDe <span>Til o‘rganish — har kuni bir qadam.</span></footer>
+  </main>
+</div>
+
+<div class="backdrop" id="modalBackdrop" hidden>
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <div><small id="modalEyebrow">KONTENT</small><h2 id="modalTitle">Yangi dars</h2></div>
+      <button class="icon-button" id="modalClose" aria-label="Yopish">×</button>
+    </div>
+    <form id="contentForm">
+      <label for="itemTitle">Nomi</label>
+      <input class="input" id="itemTitle" name="title" placeholder="Masalan, Kundalik salomlashuv" required maxlength="80">
+      <div class="form-row">
+        <div>
+          <label for="itemLevel">Daraja</label>
+          <select class="input" id="itemLevel" name="level">
+            <option value="Anfänger">Anfänger - Boshlang‘ich</option>
+            <option value="Grundkenntnisse">Grundkenntnisse - Asosiy bilimlar</option>
+            <option value="Erweiterte Grundkenntnisse">Erweiterte Grundkenntnisse - Kengaytirilgan boshlang‘ich bilimlar</option>
+            <option value="Mittelstufe">Mittelstufe - O‘rta daraja</option>
+            <option value="Obere Mittelstufe">Obere Mittelstufe - Yuqori o‘rta daraja</option>
+            <option value="Prüfungsvorbereitung">Prüfungsvorbereitung - Imtihonga tayyorgarlik</option>
+          </select>
+        </div>
+        <div>
+          <label for="itemDuration">Davomiyligi (daq.)</label>
+          <input class="input" id="itemDuration" name="duration" type="number" min="1" max="180" value="10">
+        </div>
+      </div>
+      <label for="itemDescription">Izoh / tarjima</label>
+      <textarea class="input" id="itemDescription" name="description" rows="3" maxlength="240" placeholder="Qisqacha ma’lumot..."></textarea>
+      <div class="modal-actions">
+        <button class="button quiet" type="button" id="cancelModal">Bekor qilish</button>
+        <button class="button primary" type="submit">Saqlash <span>↗</span></button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="auth.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

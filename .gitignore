@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Runtime data — Render'da bo'sh baza yaratiladi va avtomatik demo o'quvchilar/admin qo'shiladi
+backend/data/*.db
+
+# IDE
+.idea/
+.vscode/

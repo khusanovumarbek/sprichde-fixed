@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f8fc">
+<title>SprichDe · Kirish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="application-name" content="SprichDe">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SprichDe">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<script src="pwa.js" defer></script>
+<link rel="stylesheet" href="theme.css">
+<style>
+:root{
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  --blue:var(--primary);
+  --blue-dark:var(--primary-2);
+  --ink:var(--text);
+  --muted:#788196;
+  --line:#e9ebf2;
+  --shadow:0 12px 32px #1d2b4b0f;
+}
+html[data-theme="dark"]{--muted:var(--muted);}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px 16px;
+  background:
+    radial-gradient(1200px 600px at 15% -10%, #dbe6ff 0%, transparent 55%),
+    radial-gradient(900px 500px at 110% 110%, #fde9c8 0%, transparent 50%),
+    var(--bg);
+  color:var(--text);
+}
+html[data-theme="dark"] body{
+  background:
+    radial-gradient(1200px 600px at 15% -10%, #1b2f52 0%, transparent 55%),
+    radial-gradient(900px 500px at 110% 110%, #23304d 0%, transparent 50%),
+    var(--bg);
+}
+.card{
+  width:100%;
+  max-width:880px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.left{
+  background:linear-gradient(160deg,var(--blue) 0%,var(--blue-dark) 100%);
+  color:#fff;
+  padding:40px 36px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:24px;
+}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff}
+.brand-icon{width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:24px;font-weight:800}
+.brand-icon span{color:#eac84a}
+.brand b{display:block;font-size:18px}
+.brand b span{color:#eac84a}
+.brand small{font-size:9px;letter-spacing:1.8px;font-weight:700;opacity:.8}
+.left h1{font-size:30px;line-height:1.25;margin:0;font-weight:800}
+.left h1 span{color:#eac84a}
+.left p{margin:0;font-size:13px;line-height:1.6;opacity:.9}
+.feats{display:grid;gap:12px}
+.feat{display:flex;gap:10px;align-items:center;font-size:12.5px;font-weight:600}
+.feat i{width:26px;height:26px;flex:0 0 26px;border-radius:8px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-style:normal;font-size:14px}
+.right{padding:40px 34px}
+@media(max-width:760px){.card{grid-template-columns:1fr}.left{display:none}.right{padding:32px 26px}}
+@media(max-width:380px){
+  body{padding:18px 12px}
+  .right{padding:26px 20px}
+  .right h2{font-size:19px}
+  .button{height:46px}}
+.right h2{font-size:22px;margin:0 0 4px;font-weight:800}
+.right .sub{font-size:12px;color:var(--muted);margin:0 0 22px}
+form{display:grid;gap:14px}
+label{display:grid;gap:6px;font-size:11px;font-weight:700;color:var(--text);letter-spacing:.3px}
+.input{
+  width:100%;
+  height:46px;
+  border:1px solid var(--line);
+  background:var(--surface-2);
+  border-radius:11px;
+  padding:0 14px;
+  font:inherit;
+  font-size:13px;
+  color:var(--text);
+  transition:border-color .15s, box-shadow .15s;
+  outline:none;
+}
+.input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #3157a41f;background:var(--surface)}
+.input.error{border-color:#d2453c;box-shadow:0 0 0 3px #d2453c1a}
+.error-msg{font-size:10.5px;color:#d2453c;font-weight:600;min-height:13px;margin-top:-6px}
+.button{
+  height:48px;
+  border:0;
+  border-radius:12px;
+  background:var(--blue);
+  color:#fff;
+  font:inherit;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  letter-spacing:.3px;
+  transition:background .15s, transform .1s;
+}
+.button:hover{background:var(--blue-dark)}
+.button:active{transform:scale(.98)}
+.foot{margin-top:14px;font-size:11px;color:var(--muted);text-align:center;line-height:1.6}
+.foot a{color:var(--blue);font-weight:700;text-decoration:none}
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:34px;
+  transform:translate(-50%,20px);
+  background:#1c2434;
+  color:#fff;
+  padding:12px 22px;
+  border-radius:12px;
+  font-size:12.5px;
+  font-weight:600;
+  opacity:0;
+  pointer-events:none;
+  transition:all .25s;
+  z-index:50;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid #ffffff55;border-top-color:#fff;animation:spin .7s linear infinite;display:inline-block;vertical-align:-3px;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <aside class="left">
+    <a class="brand" href="#"><span class="brand-icon">S<span>.</span></span><span><b>Sprich<span>De</span></b><small>NEMIS TILI</small></span></a>
+    <div>
+      <h1>Nemis tilini<br>o‘rganish<br><span>davom ettiring.</span></h1>
+      <p>Kirish qiling va darslar, lug‘at hamda mashqlarga kiring.</p>
+    </div>
+    <div class="feats">
+      <div class="feat"><i>✓</i> 6 ta CEFR daraja</div>
+      <div class="feat"><i>✓</i> Har kuni yangi dars va so‘zlar</div>
+      <div class="feat"><i>✓</i> Shaxsiy natijalar kabineti</div>
+      <div class="feat"><i>✓</i> Istalgan vaqtda kirish/chiqish mumkin</div>
+    </div>
+  </aside>
+
+  <section class="right">
+    <h2>Kirish</h2>
+    <p class="sub">Hisobingizga kirish uchun ma’lumotlaringizni kiriting.</p>
+
+    <form id="loginForm" novalidate>
+      <label>Email<input class="input" name="email" id="fEmail" type="email" placeholder="siz@example.com" required autocomplete="email"></label>
+      <label>Parol<input class="input" name="password" id="fPassword" type="password" placeholder="Parolingiz" required autocomplete="current-password"></label>
+      <div class="error-msg" id="formError"></div>
+      <button class="button" type="submit" id="submitBtn">Kirish ↗</button>
+    </form>
+
+    <p class="foot">Hisobingiz yo‘qmi? <a href="register.html">Ro‘yxatdan o‘ting</a><br><a href="admin.html" style="font-weight:400;opacity:.75">Administrator kirishi →</a></p>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="auth.js"></script>
+<script>
+  // Allaqachon kirgan BO'LSA — faqat o'quvchini ilovaga yo'naltiramiz.
+  // Admin sessiya bo'lsa ham login sahifasi tuzoqqa aylanib qolmasin:
+  // form ko'rinib turadi, admin panelga esa pastdagi havola orqali o'tiladi.
+  const existing = getAuth();
+  if (existing && existing.role === 'student') {
+    location.replace('app.html');
+  }
+
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  function notify(text) {
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  const form = document.getElementById('loginForm');
+  const errorBox = document.getElementById('formError');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.textContent = '';
+    const email = form.fEmail.value.trim().toLowerCase();
+    const password = form.fPassword.value;
+    if (!email || !password) {
+      errorBox.textContent = 'Email va parolni kiriting.';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span>Kirilmoqda…';
+
+    try {
+      const data = await authFetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+      setAuth({ token: data.token, role: data.role, profile: data.profile });
+      notify('Xush kelibsiz, ' + String(data.profile.fullName || '').split(' ')[0] + '!');
+      setTimeout(() => location.replace('app.html'), 500);
+    } catch (err) {
+      errorBox.textContent = err.message;
+      form.fPassword.value = '';
+      form.fPassword.focus();
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Kirish ↗';
+    }
+  });
+</script>
+</body>
+</html>

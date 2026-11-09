@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f8fc">
+<title>SprichDe · Ro‘yxatdan o‘tish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="application-name" content="SprichDe">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SprichDe">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<script src="pwa.js" defer></script>
+<link rel="stylesheet" href="theme.css">
+<style>
+:root{
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  --blue:var(--primary);
+  --blue-dark:var(--primary-2);
+  --ink:var(--text);
+  --muted:#788196;
+  --line:#e9ebf2;
+  --shadow:0 12px 32px #1d2b4b0f;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px 16px;
+  background:
+    radial-gradient(1200px 600px at 15% -10%, #dbe6ff 0%, transparent 55%),
+    radial-gradient(900px 500px at 110% 110%, #fde9c8 0%, transparent 50%),
+    var(--bg);
+  color:var(--text);
+}
+html[data-theme="dark"] body{
+  background:
+    radial-gradient(1200px 600px at 15% -10%, #1b2f52 0%, transparent 55%),
+    radial-gradient(900px 500px at 110% 110%, #23304d 0%, transparent 50%),
+    var(--bg);
+}
+.card{
+  width:100%;
+  max-width:880px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.left{
+  background:linear-gradient(160deg,var(--blue) 0%,var(--blue-dark) 100%);
+  color:#fff;
+  padding:40px 36px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:24px;
+}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff}
+.brand-icon{width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:24px;font-weight:800}
+.brand-icon span{color:#eac84a}
+.brand b{display:block;font-size:18px}
+.brand b span{color:#eac84a}
+.brand small{font-size:9px;letter-spacing:1.8px;font-weight:700;opacity:.8}
+.left h1{font-size:30px;line-height:1.25;margin:0;font-weight:800}
+.left h1 span{color:#eac84a}
+.left p{margin:0;font-size:13px;line-height:1.6;opacity:.9}
+.feats{display:grid;gap:12px}
+.feat{display:flex;gap:10px;align-items:center;font-size:12.5px;font-weight:600}
+.feat i{width:26px;height:26px;flex:0 0 26px;border-radius:8px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-style:normal;font-size:14px}
+.right{padding:36px 34px}
+@media(max-width:760px){.card{grid-template-columns:1fr}.left{padding:32px 26px;gap:16px}.right{padding:26px}}
+.right h2{font-size:22px;margin:0 0 4px;font-weight:800}
+.right .sub{font-size:12px;color:var(--muted);margin:0 0 20px}
+form{display:grid;gap:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+label{display:grid;gap:6px;font-size:11px;font-weight:700;color:var(--text);letter-spacing:.3px}
+.input, select.input{
+  width:100%;
+  height:44px;
+  border:1px solid var(--line);
+  background:var(--surface-2);
+  border-radius:11px;
+  padding:0 14px;
+  font:inherit;
+  font-size:13px;
+  color:var(--text);
+  transition:border-color .15s, box-shadow .15s;
+  outline:none;
+}
+.input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #3157a41f;background:var(--surface)}
+.input.error{border-color:#d2453c;box-shadow:0 0 0 3px #d2453c1a}
+.error-msg{font-size:10.5px;color:#d2453c;font-weight:600;min-height:13px;margin-top:-6px}
+.button{
+  height:46px;
+  border:0;
+  border-radius:12px;
+  background:var(--blue);
+  color:#fff;
+  font:inherit;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  letter-spacing:.3px;
+  transition:background .15s, transform .1s;
+}
+.button:hover{background:var(--blue-dark)}
+.button:active{transform:scale(.98)}
+.footer-note{margin-top:14px;font-size:10.5px;color:var(--muted);text-align:center;line-height:1.5}
+.footer-note a{color:var(--blue);font-weight:700;text-decoration:none}
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:34px;
+  transform:translate(-50%,20px);
+  background:#1c2434;
+  color:#fff;
+  padding:12px 22px;
+  border-radius:12px;
+  font-size:12.5px;
+  font-weight:600;
+  opacity:0;
+  pointer-events:none;
+  transition:all .25s;
+  z-index:50;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.hidden{display:none !important}
+.spinner{
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid #ffffff55;border-top-color:#fff;
+  animation:spin .7s linear infinite;display:inline-block;vertical-align:-3px;margin-right:8px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.success{
+  text-align:center;padding:30px 10px 10px;display:grid;gap:14px;justify-items:center;
+}
+.success .check{
+  width:72px;height:72px;border-radius:50%;background:#e7f6ec;color:#1d9a52;
+  font-size:34px;display:grid;place-items:center;
+}
+.success h3{margin:0;font-size:20px;font-weight:800}
+.success p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="card" id="formCard">
+  <aside class="left">
+    <a class="brand" href="#"><span class="brand-icon">S<span>.</span></span><span><b>Sprich<span>De</span></b><small>NEMIS TILI</small></span></a>
+    <div>
+      <h1>Nemis tilini<br>o‘rganishni<br><span>bugun boshlang.</span></h1>
+      <p>Ro‘yxatdan o‘ting, o‘zingizga mos darajani tanlang va kurslarimizga qo‘shiling.</p>
+    </div>
+    <div class="feats">
+      <div class="feat"><i>✓</i> Boshlang‘ich → imtihon tayyorgarligi</div>
+      <div class="feat"><i>✓</i> 6 ta CEFR-ga mos daraja</div>
+      <div class="feat"><i>✓</i> Har kuni yangi dars va so‘zlar</div>
+      <div class="feat"><i>✓</i> O‘z parolingiz bilan kirishingiz mumkin</div>
+    </div>
+  </aside>
+
+  <section class="right">
+    <h2>Ro‘yxatdan o‘tish</h2>
+    <p class="sub">Ma’lumotlaringizni kiriting — hisobingiz avtomatik yaratiladi.</p>
+
+    <form id="registerForm" novalidate>
+      <div class="row">
+        <label>Ism Familiya<input class="input" name="name" id="fName" placeholder="Masalan, Ali Karimov" required autocomplete="name"></label>
+        <label>Telefon (ixtiyoriy)<input class="input" name="phone" id="fPhone" type="tel" placeholder="+998 90 123 45 67" autocomplete="tel"></label>
+      </div>
+      <label>Email<input class="input" name="email" id="fEmail" type="email" placeholder="siz@example.com" required autocomplete="email"></label>
+      <div class="row">
+        <label>Daraja
+          <select class="input" name="level" id="fLevel" required>
+            <option value="Anfänger">Anfänger - Boshlang‘ich</option>
+            <option value="Grundkenntnisse">Grundkenntnisse - Asosiy bilimlar</option>
+            <option value="Erweiterte Grundkenntnisse">Erweiterte Grundkenntnisse - Kengaytirilgan</option>
+            <option value="Mittelstufe">Mittelstufe - O‘rta daraja</option>
+            <option value="Obere Mittelstufe">Obere Mittelstufe - Yuqori o‘rta</option>
+            <option value="Prüfungsvorbereitung">Prüfungsvorbereitung - Imtihonga tayyorgarlik</option>
+          </select>
+        </label>
+        <label>Parol<input class="input" name="password" id="fPassword" type="password" placeholder="Kamida 6 belgi" required minlength="6" autocomplete="new-password"></label>
+      </div>
+      <div class="error-msg" id="formError"></div>
+      <button class="button" type="submit" id="submitBtn">Ro‘yxatdan o‘tish ↗</button>
+    </form>
+
+    <p class="footer-note">Ro‘yxatdan o‘tish orqali siz <a href="#">foydalanish shartlari</a>ga rozilik bildirasiz.<br>Hisobingiz bormi? <a href="index.html">Kirish</a></p>
+  </section>
+</div>
+
+<div class="card hidden" id="successCard" style="max-width:520px;grid-template-columns:1fr">
+  <section class="right success">
+    <div class="check">✓</div>
+    <h3>Xush kelibsiz!</h3>
+    <p>Ro‘yxatdan muvaffaqiyatli o‘tdingiz. Endi ilovaga kirishingiz mumkin — darslar sizni kutmoqda!</p>
+    <button class="button" id="goDashboard" style="width:100%">Ilovaga o‘tish ↗</button>
+    <button class="button" id="goAdminPanel" style="width:100%;display:none;background:#1c2434">Admin panelga qaytish ↗</button>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="auth.js"></script>
+<script>
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  function notify(text) {
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  const form = document.getElementById('registerForm');
+  const errorBox = document.getElementById('formError');
+  const submitBtn = document.getElementById('submitBtn');
+  const isAdminFlow = new URLSearchParams(location.search).get('admin') === '1';
+
+  function setError(el, msg) {
+    errorBox.textContent = msg;
+    el.classList.add('error');
+    el.focus();
+  }
+  ['fName', 'fPhone', 'fEmail', 'fPassword'].forEach((id) => {
+    document.getElementById(id).addEventListener('input', (e) => {
+      e.target.classList.remove('error');
+      errorBox.textContent = '';
+    });
+  });
+
+  // Allaqachon kirgan o‘quvchini ilovaga yo‘naltiramiz
+  const existing = getAuth();
+  if (existing && existing.role === 'student' && !isAdminFlow) {
+    location.replace('app.html');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.textContent = '';
+    const name = form.fName.value.trim();
+    const phone = form.fPhone.value.trim().replace(/\s+/g, '');
+    const email = form.fEmail.value.trim().toLowerCase();
+    const level = form.fLevel.value;
+    const password = form.fPassword.value;
+
+    if (name.length < 3) return setError(form.fName, 'Ism kamida 3 belgidan iborat bo‘lsin.');
+    if (phone && !/^\+?\d{9,13}$/.test(phone)) return setError(form.fPhone, 'Telefon raqami noto‘g‘ri (masalan, +998901234567).');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return setError(form.fEmail, 'Email manzili noto‘g‘ri.');
+    if (password.length < 6) return setError(form.fPassword, 'Parol kamida 6 belgidan iborat bo‘lsin.');
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span>Saqlanmoqda…';
+
+    try {
+      const result = await authFetch('/api/register', {
+        method: 'POST',
+        body: JSON.stringify({ fullName: name, email, phone, level, password }),
+      });
+
+      // Admin oqimida sessiyani almashtirmaymiz; oddiy oqimda o‘quvchini tizimga kiritamiz
+      if (!isAdminFlow) {
+        setAuth({ token: result.token, role: result.role, profile: result.profile });
+      }
+
+      document.getElementById('formCard').classList.add('hidden');
+      document.getElementById('successCard').classList.remove('hidden');
+      notify('Ro‘yxatdan muvaffaqiyatli o‘tdingiz!');
+    } catch (err) {
+      errorBox.textContent = err.message;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Ro‘yxatdan o‘tish ↗';
+    }
+  });
+
+  if (isAdminFlow) {
+    document.getElementById('goDashboard').style.display = 'none';
+    document.getElementById('goAdminPanel').style.display = '';
+  }
+
+  document.getElementById('goDashboard').addEventListener('click', () => {
+    location.href = 'app.html';
+  });
+  document.getElementById('goAdminPanel').addEventListener('click', () => {
+    location.href = 'admin.html#students';
+  });
+</script>
+</body>
+</html>

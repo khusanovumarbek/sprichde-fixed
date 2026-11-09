@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f8fc">
+<title>SprichDe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="auth.js"></script>
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="application-name" content="SprichDe">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SprichDe">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<script src="pwa.js" defer></script>
+<link rel="stylesheet" href="theme.css">
+<style>
+:root{
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  --blue:var(--primary);--blue-dark:var(--primary-2);--gold:#eac84a;
+  --ink:var(--text);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:520px;margin:0 auto;padding:0 20px 110px;
+  /* Notch va pastdagi safe-area uchun */
+  padding-left:max(20px, env(safe-area-inset-left));
+  padding-right:max(20px, env(safe-area-inset-right))}
+
+/* ---------- Yuqori qism ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0 4px}
+.hello small{display:block;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.4px}
+.hello b{font-size:22px;font-weight:800;display:block;margin-top:2px}
+.hello p{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
+.avatar{width:46px;height:46px;border-radius:15px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:800;font-size:16px;flex:none}
+
+/* ---------- 91 kunlik sayohat (katta karta) ---------- */
+.journey-card{
+  position:relative;display:block;margin-top:20px;border-radius:26px;overflow:hidden;
+  min-height:210px;text-decoration:none;color:#fff;box-shadow:var(--shadow);
+  /* Sayohatga mos fon rasmi (tog' yo'li, osmon). Tarmoqsiz ham ishlashi uchun
+     CSS gradient + SVG naqsh ishlatilgan; internet bo'lsa rasm yuklanadi. */
+  background-image:
+    linear-gradient(180deg, rgba(24,40,72,.15) 0%, rgba(24,40,72,.55) 60%, rgba(20,32,58,.88) 100%),
+    url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=70"),
+    linear-gradient(160deg,#2f5aa8 0%,#3a76c9 45%,#7aa6d8 100%);
+  background-size:cover,cover,cover;
+  background-position:center,center 30%,center;
+}
+.journey-card:active{transform:scale(.99)}
+.j-overlay{position:absolute;inset:0;background:
+  radial-gradient(120% 80% at 80% 10%, transparent 40%, rgba(16,28,52,.35) 100%)}
+.j-content{position:relative;padding:22px 22px 18px;z-index:2}
+.j-eyebrow{font-size:10.5px;font-weight:800;letter-spacing:2px;color:#ffffffcc}
+.j-title{display:block;font-size:24px;font-weight:800;margin-top:6px;line-height:1.15;
+  text-shadow:0 2px 10px rgba(10,20,40,.35)}
+.j-sub{margin:6px 0 0;font-size:12.5px;color:#ffffffd9;text-shadow:0 1px 6px rgba(10,20,40,.35)}
+.j-track{margin-top:18px;height:9px;border-radius:9px;background:#ffffff40;overflow:hidden;
+  backdrop-filter:blur(2px)}
+.j-fill{height:100%;width:0%;border-radius:9px;background:#fff;transition:width .4s ease}
+.j-meta{display:flex;justify-content:space-between;margin-top:9px;font-size:12px;font-weight:700;color:#ffffffdd}
+.j-go{position:absolute;right:20px;top:22px;font-size:12px;font-weight:700;color:#fff;
+  background:#ffffff2e;border:1px solid #ffffff45;padding:7px 13px;border-radius:20px;z-index:2;
+  backdrop-filter:blur(6px)}
+
+/* ---------- Bugungi maqsad (eski) ---------- */
+.goal{margin-top:20px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:24px;padding:22px;color:#fff;box-shadow:var(--shadow)}
+.goal small{font-size:11px;font-weight:700;letter-spacing:.5px;color:#ffffffcc}
+.goal b{display:block;font-size:19px;font-weight:800;margin-top:6px}
+.track{margin-top:18px;height:8px;border-radius:8px;background:#ffffff38;overflow:hidden}
+.fill{height:100%;width:35%;border-radius:8px;background:#fff}
+.row-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:12px;font-weight:600;color:#ffffffd9}
+
+/* ---------- Xususiyat kartalari ---------- */
+.feature{margin-top:16px;display:flex;align-items:center;gap:18px;padding:18px;border-radius:20px;background:var(--surface);border:1px solid var(--line);cursor:pointer;transition:transform .12s, box-shadow .15s;text-decoration:none;color:inherit}
+.feature:active{transform:scale(.985)}
+.feature[hidden]{display:none!important}
+@media (hover:hover) and (pointer:fine){
+  .feature{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+  .feature:hover{transform:translateY(-2px);box-shadow:0 10px 24px #1d2b4b14;border-color:var(--soft-line)}
+  .feature:hover .f-icon{transform:scale(1.08) rotate(-3deg)}
+  .f-icon{transition:transform .2s ease,background .2s ease}
+  .feature:hover .f-arrow{transform:translateX(3px)}
+  .f-arrow{transition:transform .2s ease}
+}
+.feature.accent{background:var(--soft-2);border-color:var(--soft-line)}
+/* Sinov darsi — ajralib turadigan, "yangi" ko'rinish */
+.feature.tryout{background:linear-gradient(135deg,#fff6e6,#ffefd4);border-color:#f5dfb0}
+html[data-theme="dark"] .feature.tryout{background:linear-gradient(135deg,#2a2416,#332b17);border-color:#4a3d1e}
+.feature.tryout .f-icon{background:#fde8bd}
+html[data-theme="dark"] .feature.tryout .f-icon{background:#3c3218}
+.feature.tryout .f-body b{display:flex;align-items:center;gap:8px}
+.badge-new{font-size:9px;font-weight:800;letter-spacing:.6px;color:#8a5a00;background:#ffd98a;border-radius:20px;padding:2px 8px}
+html[data-theme="dark"] .badge-new{color:#ffd98a;background:#4a3a12}
+.f-icon{width:48px;height:48px;border-radius:15px;background:var(--soft);display:grid;place-items:center;font-size:22px;flex:none}
+.feature.accent .f-icon{background:var(--soft)}
+.f-body{flex:1;min-width:0}
+.f-body b{display:block;font-size:15px;font-weight:700}
+.f-body small{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+.f-arrow{color:var(--muted);font-size:20px}
+
+/* ---------- Davom eting ---------- */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:26px 0 12px}
+.section-head b{font-size:16px;font-weight:800}
+.section-head a{font-size:12px;color:var(--blue);font-weight:700;text-decoration:none}
+.lesson{display:flex;align-items:center;gap:14px;padding:13px;border-radius:18px;background:var(--surface);border:1px solid var(--line);margin-bottom:10px;cursor:pointer}
+.lesson .l-icon{width:44px;height:44px;border-radius:13px;background:var(--soft);display:grid;place-items:center;font-size:19px;flex:none}
+.lesson .l-body{flex:1;min-width:0}
+.lesson .l-body b{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson .l-body small{font-size:11.5px;color:var(--muted)}
+.lesson .l-arrow{color:var(--muted)}
+
+/* ---------- Pastki navigatsiya ---------- */
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+.nav-inner{max-width:520px;margin:0 auto;width:100%;display:flex}
+.nav button{flex:1;border:0;background:none;padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:4px;font:inherit;font-size:10.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.nav button i{font-size:20px;font-style:normal;line-height:1}
+.nav button.active{color:var(--blue)}
+.nav button.active i{transform:translateY(-1px)}
+
+/* ---------- Boshqa sahifalar uchun bo'sh holat ---------- */
+.empty{display:none;padding:70px 20px;text-align:center;color:var(--muted)}
+.empty .e-icon{width:84px;height:84px;border-radius:26px;background:var(--soft);display:grid;place-items:center;margin:0 auto 18px;font-size:38px}
+.empty b{display:block;color:var(--ink);font-size:17px;font-weight:800;margin-bottom:6px}
+.empty small{font-size:12.5px;line-height:1.6;display:block}
+.page-view[hidden]{display:none}
+
+/* ---------- Gap tuzish mashqi ---------- */
+.practice-card{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+
+.practice-hint{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+.practice-hint b{color:var(--text)}
+.practice-answer{min-height:56px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1.5px dashed var(--line);border-radius:14px;padding:10px;background:var(--surface-2);margin-bottom:12px}
+.practice-placeholder{color:var(--muted);font-size:13px;margin:0 auto}
+.practice-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{border:1.5px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:9px 15px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:transform .1s,border-color .15s,opacity .15s}
+.chip:active{transform:scale(.94)}
+.chip.selected{border-color:var(--blue);opacity:.65}
+.practice-feedback{min-height:22px;font-size:14px;font-weight:800;margin-bottom:10px;line-height:1.4}
+.practice-feedback.ok{color:#1d7a44}
+.practice-feedback.err{color:#d2453c}
+.practice-actions{display:flex;gap:10px}
+.practice-btn{height:48px;border:0;border-radius:13px;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+.practice-reset{flex:1;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.practice-check{flex:1.5;background:var(--blue);color:#fff}
+.practice-check:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- So'zlar juftligini topish mashqi ---------- */
+.words-card{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.words-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+.words-col{display:grid;gap:8px}
+.chip.matched{border-color:#1d7a44;background:#e7f6ec;color:#1d7a44;pointer-events:none}
+html[data-theme="dark"] .chip.matched{background:#1d3a28;color:#57d18a;border-color:#57d18a}
+.chip.picked{border-color:var(--blue);box-shadow:0 0 0 2px var(--soft)}
+.chip.matched-flash-err{border-color:#d2453c;background:#fdecea;color:#d2453c}
+html[data-theme="dark"] .chip.matched-flash-err{background:#3a1d1d;color:#f28b82}
+#wordsReset{width:100%;margin-top:4px}
+
+/* ============================================================
+ * PROFIL SAHIFASI
+ * ============================================================ */
+/* --- Profil kartasi --- */
+.profile-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
+.p-head{display:flex;align-items:center;gap:14px}
+.p-avatar{position:relative;width:66px;height:66px;flex:none;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;
+  display:grid;place-items:center;font-size:24px;font-weight:800;
+  box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--soft)}
+.p-cam{position:absolute;right:-2px;bottom:-2px;width:26px;height:26px;border-radius:50%;
+  border:2px solid var(--surface);background:var(--blue);color:#fff;font-size:12px;
+  display:grid;place-items:center;cursor:pointer;padding:0}
+.p-info{flex:1;min-width:0}
+.p-info b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.p-info small{display:block;font-size:12.5px;color:var(--muted);margin-top:3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-edit{width:38px;height:38px;flex:none;border-radius:12px;border:1px solid var(--line);
+  background:var(--surface-2);font-size:15px;cursor:pointer;display:grid;place-items:center}
+.p-edit:active{transform:scale(.94)}
+.p-stats{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);
+  background:var(--soft-2);border-radius:16px;padding:16px 0}
+.p-stat{text-align:center;position:relative}
+.p-stat + .p-stat::before{content:'';position:absolute;left:0;top:12%;height:76%;width:1px;background:var(--soft-line)}
+.p-stat b{display:block;font-size:22px;font-weight:800}
+.p-stat small{font-size:10.5px;color:var(--muted);display:block;margin-top:2px;line-height:1.3}
+
+/* --- Kurslarim / Premium --- */
+.p-feature{display:flex;align-items:center;gap:14px;padding:16px;margin-top:14px;
+  border-radius:20px;background:var(--surface);border:1px solid var(--line);cursor:pointer;text-decoration:none;color:inherit}
+.p-feature:active{transform:scale(.985)}
+.pf-icon{width:48px;height:48px;flex:none;border-radius:15px;background:var(--soft);
+  display:grid;place-items:center;font-size:22px}
+.pf-body{flex:1;min-width:0}
+.pf-body b{display:block;font-size:15px;font-weight:700}
+.pf-body small{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+.pf-arrow{color:var(--muted);font-size:20px}
+.p-feature.premium{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-color:transparent;color:#fff}
+.p-feature.premium .pf-icon{background:#ffffff26}
+.p-feature.premium .pf-body b,.p-feature.premium .pf-body small{color:#fff}
+.p-feature.premium .pf-body small{color:#ffffffcc}
+
+/* --- Bo'lim sarlavhasi --- */
+.p-caption{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.5px;
+  margin:22px 4px 10px;text-transform:uppercase}
+
+/* --- Guruh (ro'yxat) --- */
+.p-group{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.p-item{width:100%;display:flex;align-items:center;gap:14px;padding:15px 16px;
+  background:none;border:0;border-bottom:1px solid var(--line);font:inherit;color:var(--text);
+  text-align:left;cursor:pointer;text-decoration:none}
+.p-item:last-child{border-bottom:0}
+.p-item[hidden]{display:none}
+.p-item:active{background:var(--surface-2)}
+.pi-icon{width:40px;height:40px;flex:none;border-radius:12px;background:var(--soft);
+  display:grid;place-items:center;font-size:18px}
+.p-item b{flex:1;font-size:14.5px;font-weight:700}
+.pi-arrow{color:var(--muted);font-size:20px}
+.p-pill{font-size:11px;font-weight:800;color:var(--blue);background:var(--soft);
+  border-radius:20px;padding:5px 12px}
+
+/* --- To'lov oynasi (premium) --- */
+.pay-bg{position:fixed;inset:0;z-index:50;background:#0b162bb3;backdrop-filter:blur(3px);
+  display:flex;align-items:flex-end}
+.pay-bg[hidden]{display:none}
+.pay-sheet{width:100%;max-width:520px;margin:0 auto;background:var(--surface);
+  border-radius:24px 24px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));
+  max-height:92vh;overflow:auto;box-shadow:0 -20px 60px #00000033}
+.pay-handle{width:42px;height:4px;border-radius:4px;background:var(--line);margin:4px auto 14px}
+.pay-sheet h3{margin:0;font-size:19px;font-weight:800;text-align:center}
+.pay-lead{margin:6px 0 16px;text-align:center;font-size:12px;color:var(--muted);line-height:1.5}
+.pay-card{position:relative;background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+  border-radius:18px;padding:16px;color:#fff;margin-bottom:16px}
+.pay-card small{display:block;font-size:9.5px;letter-spacing:1.8px;font-weight:800;color:#ffffffb3}
+.pay-card b{display:block;font-size:19px;letter-spacing:1.5px;margin:8px 0 4px;font-weight:800}
+.pay-card span{font-size:11.5px;color:#ffffffcc}
+.pay-copy{position:absolute;right:14px;top:14px;border:1px solid #ffffff55;background:#ffffff1f;
+  color:#fff;border-radius:10px;padding:6px 10px;font:inherit;font-size:11px;font-weight:700;cursor:pointer}
+.pay-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.pay-plan{border:1.5px solid var(--line);background:var(--surface);border-radius:14px;
+  padding:11px 6px;text-align:center;cursor:pointer;font:inherit;color:var(--text)}
+.pay-plan b{display:block;font-size:13px;font-weight:800}
+.pay-plan small{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+.pay-plan span{display:block;font-size:10.5px;font-weight:700;color:var(--blue);margin-top:6px}
+.pay-plan.active{border-color:var(--blue);background:var(--soft-2);box-shadow:0 0 0 3px var(--soft)}
+.pay-label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin:0 0 6px}
+.pay-input{width:100%;height:46px;border:1.5px solid var(--line);border-radius:12px;
+  background:var(--surface-2);color:var(--text);padding:0 14px;font:inherit;font-size:14px;outline:none}
+.pay-input:focus{border-color:var(--blue)}
+.pay-methods{display:flex;gap:8px;margin-top:12px}
+.pay-methods button{flex:1;height:40px;border:1.5px solid var(--line);background:var(--surface);
+  color:var(--muted);border-radius:11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.pay-methods button.active{border-color:var(--blue);color:var(--blue);background:var(--soft-2)}
+.pay-submit{width:100%;height:50px;margin-top:16px;border:0;border-radius:14px;
+  background:var(--blue);color:#fff;font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.pay-submit:disabled{opacity:.6}
+.pay-note{margin:10px 0 0;font-size:10.5px;color:var(--muted);line-height:1.5;text-align:center}
+.pay-close{width:100%;height:42px;margin-top:8px;border:0;background:none;color:var(--muted);
+  font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.pay-status{margin-top:10px;border-radius:11px;padding:10px 12px;font-size:11.5px;
+  line-height:1.5;display:none}
+.pay-status.show{display:block}
+.pay-status.ok{background:#e7f6ec;color:#1d7a44}
+.pay-status.warn{background:#fff5df;color:#8a5a00}
+html[data-theme="dark"] .pay-status.ok{background:#1d3a28;color:#57d18a}
+html[data-theme="dark"] .pay-status.warn{background:#3c3218;color:#f0c96a}
+
+/* ============================================================
+ * MOBIL MOSLASHUV (responsive)
+ * Kichik telefonlar (≤380px), oddiy telefonlar, planshetlar
+ * ============================================================ */
+
+/* Juda kichik telefonlar (iPhone SE va sh.k.) */
+@media (max-width: 380px){
+  .wrap{padding-left:max(14px, env(safe-area-inset-left));padding-right:max(14px, env(safe-area-inset-right))}
+  .hello b{font-size:19px}
+  .hello p{font-size:11.5px}
+  .avatar{width:40px;height:40px;border-radius:13px;font-size:14px}
+  .journey-card{min-height:180px;border-radius:22px}
+  .j-title{font-size:20px}
+  .j-sub{font-size:11.5px}
+  .j-go{font-size:11px;padding:6px 10px;right:16px;top:16px}
+  .f-icon{width:42px;height:42px;font-size:19px;border-radius:13px}
+  .f-body b{font-size:14px}
+  .f-body small{font-size:11px}
+  .lesson .l-icon{width:40px;height:40px;font-size:17px}
+  .nav button{font-size:9.5px}
+  .nav button i{font-size:18px}
+  }
+
+/* Katta telefonlar / kichik planshetlar: markazlashgan ustun saqlanadi */
+
+/* Gorizontal (landshaft) rejim — balandlik kam bo'lganda */
+@media (max-height: 480px) and (orientation: landscape){
+  .journey-card{min-height:150px}
+  .top{padding:14px 0 4px}
+  .wrap{padding-bottom:90px}
+}
+
+/* Planshet / kompyuter: fon markazda, chetlarda to'q rang */
+@media (min-width: 700px){
+  body{background:var(--bg)}
+  .wrap{border-left:1px solid var(--line);border-right:1px solid var(--line);min-height:100vh}
+}
+
+/* Teginish (touch) qurilmalarda hover effektlarini o'chiramiz */
+@media (hover: none){
+  .feature:active,.social:active{transform:scale(.98)}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- ================= BOSH SAHIFA ================= -->
+  <section id="view-home" class="page-view">
+    <div class="top">
+      <div class="hello">
+        <small>GUTEN TAG 👋</small>
+        <b id="userName">Foydalanuvchi</b>
+        <p>Bugun nemis tilida yana bir qadam.</p>
+      </div>
+      <div class="avatar" id="userAvatar">?</div>
+    </div>
+
+    <!-- 91 kunlik sayohat (katta karta) -->
+    <a class="journey-card" href="journey.html">
+      <div class="j-overlay"></div>
+      <div class="j-content">
+        <small class="j-eyebrow">SAYOHAT</small>
+        <b class="j-title">91 kunlik sayohat</b>
+        <p class="j-sub">Har kuni bir qadam — katta natija sari</p>
+        <div class="j-track"><div class="j-fill" id="journeyFill"></div></div>
+        <div class="j-meta"><span id="journeyDays">0 / 91 kun</span><span id="journeyPct">0%</span></div>
+      </div>
+      <span class="j-go">Boshlash ›</span>
+    </a>
+
+    <!-- Sinov darsi (do'stni taklif qilishdan tepasida) -->
+    <a class="feature tryout" id="trialFeature" href="trial.html">
+      <span class="f-icon">🎬</span>
+      <span class="f-body"><b>Sinov darsi <span class="badge-new">BEPUL</span></b><small>Sinab ko‘ring — 1-dars</small></span>
+      <span class="f-arrow">›</span>
+    </a>
+
+    <!-- Do'stni taklif qilish -->
+    <a class="feature accent" href="invite.html">
+      <span class="f-icon">🎁</span>
+      <span class="f-body"><b>Do‘stni taklif qilish</b><small>Havolani ulashing va bonus oling</small></span>
+      <span class="f-arrow">›</span>
+    </a>
+
+    <!-- Davom eting -->
+    <div class="section-head"><b>Davom eting</b><a href="#" id="seeAllLessons">Barchasi</a></div>
+    <div id="lessonList"></div>
+  </section>
+
+  <!-- ================= DARSLAR ================= -->
+  <section id="view-lessons" class="page-view" hidden>
+    <div class="top"><div class="hello"><small>O‘QUV BO‘LIMI</small><b>Darslar</b><p>Darajangizga mos darslar.</p></div></div>
+    <div id="lessonsFull"></div>
+  </section>
+
+  <!-- ================= SO'ZLAR ================= -->
+  <section id="view-words" class="page-view" hidden>
+    <div class="top"><div class="hello"><small>LUG‘AT</small><b>So‘zlar</b><p>Nemischa va o‘zbekcha juftliklarni toping.</p></div></div>
+    <div class="words-card">
+      <div class="practice-hint">Chap ustundan nemischa so‘zni, o‘ng ustundan mos o‘zbekcha tarjimasini tanlang. Mos juftlik to‘g‘ri joyiga o‘tadi.</div>
+      <div class="words-grid">
+        <div class="words-col" id="wordsDe" aria-label="Nemischa"></div>
+        <div class="words-col" id="wordsUz" aria-label="O‘zbekcha"></div>
+      </div>
+      <div class="practice-feedback" id="wordsFeedback" role="status" aria-live="polite"></div>
+      <button class="practice-btn practice-reset" id="wordsReset" type="button">Qayta aralashtirish</button>
+    </div>
+  </section>
+
+  <!-- ================= MASHQ ================= -->
+  <section id="view-practice" class="page-view" hidden>
+    <div class="top"><div class="hello"><small>MASHG‘ULOT</small><b>Mashq</b><p>Gapni so‘zlarini to‘g‘ri tartibga qo‘ying.</p></div></div>
+    <div class="practice-card">
+      <div class="practice-hint">Tarjimasi: <b>«Men bugun nemis tilini o‘rganyapman»</b><br>So‘zlarni to‘g‘ri tartibda qo‘yib gap hosil qiling:</div>
+      <div class="practice-answer" id="answerBox"><span class="practice-placeholder">So‘zlarni tanlang…</span></div>
+      <div class="practice-bank" id="wordBank"></div>
+      <div class="practice-feedback" id="practiceFeedback" role="status" aria-live="polite"></div>
+      <div class="practice-actions">
+        <button class="practice-btn practice-reset" id="resetPractice" type="button">Qayta urinish</button>
+        <button class="practice-btn practice-check" id="checkPractice" type="button">Tekshirish ✓</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROFIL ================= -->
+  <section id="view-profile" class="page-view" hidden>
+    <!-- Profil kartasi -->
+    <div class="profile-card">
+      <div class="p-head">
+        <div class="p-avatar">
+          <span id="pInitials">?</span>
+          <button class="p-cam" type="button" aria-label="Rasmni o‘zgartirish">📷</button>
+        </div>
+        <div class="p-info">
+          <b id="pName">Foydalanuvchi</b>
+          <small id="pEmail">email</small>
+        </div>
+        <button class="p-edit" id="editProfileBtn" type="button" aria-label="Tahrirlash">✏️</button>
+      </div>
+      <div class="p-stats">
+        <div class="p-stat"><b id="pStreak">0</b><small>Kunlik faollik</small></div>
+        <div class="p-stat"><b id="pLevel">0</b><small>Faollik darajasi</small></div>
+        <div class="p-stat"><b id="pPoints">0</b><small>To‘plangan ball</small></div>
+      </div>
+    </div>
+
+    <!-- Kurslarim / Premium -->
+    <div class="p-feature" id="myCourses">
+      <span class="pf-icon">🎓</span>
+      <span class="pf-body"><b>Kurslarim</b><small id="pCourseSub">Nemis tili — A1 dan boshlab</small></span>
+      <span class="pf-arrow">›</span>
+    </div>
+    <div class="p-feature premium" id="premiumCard" role="button" tabindex="0">
+      <span class="pf-icon">📖</span>
+      <span class="pf-body"><b>Premium · <span id="pPremiumDays">0</span> kun qoldi</b><small id="pPremiumSub">Premium a’zolik faol</small></span>
+      <span class="pf-arrow">›</span>
+    </div>
+
+    <!-- Shaxsiy -->
+    <div class="p-caption">Shaxsiy</div>
+    <div class="p-group">
+      <button class="p-item" id="itemProfile" type="button"><span class="pi-icon">👤</span><b>Profil</b><span class="pi-arrow">›</span></button>
+      <a class="p-item" href="journey.html"><span class="pi-icon">📜</span><b>Sertifikatlar</b><span class="pi-arrow">›</span></a>
+      <a class="p-item" href="invite.html"><span class="pi-icon">👥</span><b>Do‘stlarni taklif qilish</b><span class="pi-arrow">›</span></a>
+      <button class="p-item" id="itemPassword" type="button"><span class="pi-icon">🔒</span><b>Parolni o‘zgartirish</b><span class="pi-arrow">›</span></button>
+    </div>
+
+    <!-- Sozlamalar -->
+    <div class="p-caption">Sozlamalar</div>
+    <div class="p-group">
+      <button class="p-item" id="itemInstall" type="button" hidden>
+        <span class="pi-icon">📲</span><b>Ilovani o‘rnatish</b>
+        <span class="pi-arrow">›</span>
+      </button>
+      <button class="p-item" id="itemTheme" type="button">
+        <span class="pi-icon" id="themeIcon">🌙</span><b id="themeLabel">Tungi rejim</b>
+      </button>
+      <button class="p-item" id="itemLogout" type="button"><span class="pi-icon">🚪</span><b>Chiqish</b><span class="pi-arrow">›</span></button>
+    </div>
+  </section>
+</div>
+
+<!-- ================= TO'LOV OYNASI ================= -->
+<div class="pay-bg" id="payBg" hidden>
+  <div class="pay-sheet" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+    <div class="pay-handle"></div>
+    <h3 id="payTitle">Premium to‘lov</h3>
+    <p class="pay-lead">Rejani tanlang va to‘lovni quyidagi kartaga o‘tkazing.</p>
+
+    <div class="pay-card">
+      <small>TO‘LOV KARTASI</small>
+      <b id="payCardNumber">9860 1701 1016 2592</b>
+      <span id="payHolder">SprichDe</span>
+      <button class="pay-copy" id="payCopy" type="button">Nusxalash</button>
+    </div>
+
+    <div class="pay-plans" id="payPlans"></div>
+
+    <label class="pay-label" for="payPayer">To‘lov qilgan karta raqami (ixtiyoriy)</label>
+    <input class="pay-input" id="payPayer" inputmode="numeric" maxlength="19" placeholder="8600 0000 0000 0000">
+
+    <div class="pay-methods" id="payMethods">
+      <button type="button" data-method="uzcard" class="active">Uzcard</button>
+      <button type="button" data-method="humo">Humo</button>
+      <button type="button" data-method="visa">Visa</button>
+    </div>
+
+    <div class="pay-status" id="payStatus"></div>
+    <button class="pay-submit" id="paySubmit" type="button">To‘lov qildim</button>
+    <p class="pay-note">To‘lov administrator tasdiqlagach premium faollashadi. To‘lovlar 9860170110162592 kartasiga tushadi.</p>
+    <button class="pay-close" id="payClose" type="button">Yopish</button>
+  </div>
+</div>
+
+<!-- ================= PASTKI NAVIGATSIYA ================= -->
+<nav class="nav">
+  <div class="nav-inner">
+    <button data-view="home" class="active"><i>🏠</i>Bosh sahifa</button>
+    <button data-view="lessons"><i>📘</i>Darslar</button>
+    <button data-view="words"><i>🅰️</i>So‘zlar</button>
+    <button data-view="practice"><i>✅</i>Mashq</button>
+    <button data-view="profile"><i>👤</i>Profil</button>
+  </div>
+</nav>
+
+<script>
+// ============================================================
+// SprichDe — o'quvchi kabineti (backend + SQLite bilan ishlaydi)
+// ============================================================
+const TOTAL_DAYS = 91;
+const FALLBACK_PLANS = [
+  { months: 3, days: 91 },
+  { months: 6, days: 182 },
+  { months: 12, days: 365 },
+];
+
+let profile = null;
+let progress = { completedDays: [], trialDone: false, totalDays: TOTAL_DAYS };
+let paymentInfo = null;
+let latestPayment = null;
+let selectedPlan = 3;
+let selectedMethod = 'uzcard';
+
+const el = (id) => document.getElementById(id);
+
+// ---------- Ko'rinishni yangilash ----------
+function paintUser() {
+  if (!profile) return;
+  const first = String(profile.fullName || 'do‘st').split(' ')[0];
+  el('userName').textContent = 'Salom, ' + first;
+  el('userAvatar').textContent = first.slice(0, 1).toUpperCase();
+}
+
+function paintJourney() {
+  const completedDays = Array.isArray(progress.completedDays) ? progress.completedDays : [];
+  const done = completedDays.length;
+  const trialFeature = el('trialFeature');
+  // Sinov darsi birinchi dars yakunlangach bosh sahifadan butunlay olib tashlanadi.
+  if (trialFeature) trialFeature.hidden = Boolean(progress.trialDone || completedDays.includes(1));
+  const total = progress.totalDays || TOTAL_DAYS;
+  const percent = Math.round((done / total) * 100);
+  el('journeyFill').style.width = percent + '%';
+  el('journeyDays').textContent = done + ' / ' + total + ' kun';
+  el('journeyPct').textContent = percent + '%';
+}
+
+function paintPremium() {
+  if (!profile) return;
+  const left = Number(profile.premiumDaysLeft || 0);
+  el('pPremiumDays').textContent = left;
+  const pending = latestPayment && latestPayment.status === 'pending';
+
+  if (pending) {
+    el('pPremiumSub').textContent =
+      'To‘lov kutilmoqda · ' + latestPayment.months + ' oylik';
+  } else if (left > 0) {
+    const until = profile.premiumUntil
+      ? new Intl.DateTimeFormat('uz-UZ', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+        }).format(new Date(profile.premiumUntil))
+      : '';
+    el('pPremiumSub').textContent =
+      'Premium faol' + (until ? ' · ' + until + ' gacha' : '');
+  } else {
+    el('pPremiumSub').textContent = 'Premium tugagan — yangilang';
+  }
+}
+
+function paintProfile() {
+  if (!profile) return;
+  const done = progress.completedDays.length;
+  const level = done > 0 ? Math.max(1, Math.min(6, Math.ceil(done / 3))) : 0;
+
+  el('pName').textContent = profile.fullName;
+  el('pEmail').textContent = profile.email;
+  el('pInitials').textContent = initials(profile.fullName);
+  el('pStreak').textContent = done;
+  el('pLevel').textContent = level;
+  el('pPoints').textContent = done * 50;
+  el('pCourseSub').textContent = 'Nemis tili — ' + (profile.level || 'Anfänger');
+  paintPremium();
+}
+
+// ---------- Darslar ma'lumoti ----------
+const lessons = [
+  { icon: '💬', title: 'Salomlashish', level: 'A1 · 1-dars' },
+  { icon: '🤝', title: 'Kundalik tanishuv', level: 'A1 · 2-dars' },
+  { icon: '☕', title: 'Kafe va buyurtma', level: 'A1 · 3-dars' },
+  { icon: '👨‍👩‍👧', title: 'Oila', level: 'A1 · 4-dars' },
+];
+const lessonHtml = (l) =>
+  `<div class="lesson"><span class="l-icon">${l.icon}</span><span class="l-body"><b>${l.title}</b><small>${l.level}</small></span><span class="l-arrow">›</span></div>`;
+el('lessonList').innerHTML = lessons.slice(0, 2).map(lessonHtml).join('');
+el('lessonsFull').innerHTML = lessons.map(lessonHtml).join('');
+
+// ---------- So'zlar: juftlikni topish ----------
+const WORD_PAIRS = [
+  ['Hallo', 'Salom'],
+  ['Danke', 'Rahmat'],
+  ['das Wasser', 'suv'],
+  ['die Familie', 'oila'],
+  ['der Freund', 'do‘st'],
+  ['Guten Abend', 'Xayrli kech'],
+];
+function shuffledIndices(n) {
+  const arr = Array.from({ length: n }, (_, i) => i);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+function renderWordsGame() {
+  const deBox = document.getElementById('wordsDe');
+  const uzBox = document.getElementById('wordsUz');
+  deBox.innerHTML = '';
+  uzBox.innerHTML = '';
+  wordsGameState = { dePick: null, uzPick: null, matched: 0 };
+  for (const i of shuffledIndices(WORD_PAIRS.length)) {
+    deBox.insertAdjacentHTML('beforeend', `<button type="button" class="chip" data-pair="${i}">${WORD_PAIRS[i][0]}</button>`);
+  }
+  for (const i of shuffledIndices(WORD_PAIRS.length)) {
+    uzBox.insertAdjacentHTML('beforeend', `<button type="button" class="chip" data-pair="${i}">${WORD_PAIRS[i][1]}</button>`);
+  }
+  const feedback = document.getElementById('wordsFeedback');
+  if (feedback) { feedback.textContent = ''; feedback.className = 'practice-feedback'; }
+  deBox.querySelectorAll('.chip').forEach((c) => c.addEventListener('click', () => onWordChip(c, 'de')));
+  uzBox.querySelectorAll('.chip').forEach((c) => c.addEventListener('click', () => onWordChip(c, 'uz')));
+}
+let wordsGameState = { dePick: null, uzPick: null, matched: 0 };
+function onWordChip(chip, lang) {
+  if (chip.classList.contains('matched')) return;
+  const other = lang === 'de' ? 'uzPick' : 'dePick';
+  const key = lang === 'de' ? 'dePick' : 'uzPick';
+  const feedback = document.getElementById('wordsFeedback');
+  if (wordsGameState[key] === chip) {
+    chip.classList.remove('picked');
+    wordsGameState[key] = null;
+    return;
+  }
+  if (wordsGameState[key]) wordsGameState[key].classList.remove('picked');
+  wordsGameState[key] = chip;
+  chip.classList.add('picked');
+  if (!wordsGameState[other]) return;
+  // ikkala tomon tanlangan — tekshiramiz
+  const match = wordsGameState.dePick.dataset.pair === wordsGameState.uzPick.dataset.pair;
+  const a = wordsGameState.dePick, b = wordsGameState.uzPick;
+  if (match) {
+    a.classList.remove('picked'); b.classList.remove('picked');
+    a.classList.add('matched'); b.classList.add('matched');
+    wordsGameState.dePick = null; wordsGameState.uzPick = null;
+    wordsGameState.matched++;
+    if (wordsGameState.matched === WORD_PAIRS.length) {
+      feedback.textContent = 'Barcha juftliklar topildi! Barakalla 🎉';
+      feedback.className = 'practice-feedback ok';
+    } else {
+      feedback.textContent = 'To‘g‘ri! Davom eting…';
+      feedback.className = 'practice-feedback ok';
+    }
+  } else {
+    a.classList.add('matched-flash-err'); b.classList.add('matched-flash-err');
+    feedback.textContent = 'Noto‘g‘ri juftlik — qayta urinib ko‘ring.';
+    feedback.className = 'practice-feedback err';
+    setTimeout(() => {
+      [a, b].forEach((c) => c.classList.remove('picked', 'matched-flash-err'));
+    }, 600);
+    wordsGameState.dePick = null; wordsGameState.uzPick = null;
+  }
+}
+document.getElementById('wordsReset').addEventListener('click', renderWordsGame);
+renderWordsGame();
+
+// ---------- Mashq: gapni to'g'ri tartibga qo'ying ----------
+const EXERCISE = {
+  hint: 'Men bugun nemis tilini o‘rganyapman',
+  answer: ['Ich', 'lerne', 'heute', 'Deutsch'],
+};
+let exerciseChosen = [];
+const shuffledExerciseWords = ['heute', 'Ich', 'Deutsch', 'lerne'];
+
+function shuffleExercise() {
+  exerciseChosen = [];
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = shuffledExerciseWords.map((w) =>
+    `<button type="button" class="chip" data-word="${w}">${w}</button>`
+  ).join('');
+  bank.querySelectorAll('.chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      if (chip.classList.contains('selected')) return;
+      chip.classList.add('selected');
+      exerciseChosen.push(chip.dataset.word);
+      renderPracticeAnswer();
+    });
+  });
+  const feedback = document.getElementById('practiceFeedback');
+  feedback.textContent = '';
+  feedback.className = 'practice-feedback';
+  renderPracticeAnswer();
+}
+
+function renderPracticeAnswer() {
+  const box = document.getElementById('answerBox');
+  if (exerciseChosen.length === 0) {
+    box.innerHTML = '<span class="practice-placeholder">So‘zlarni tanlang…</span>';
+  } else {
+    box.innerHTML = exerciseChosen.map((w) =>
+      `<button type="button" class="chip" data-word="${w}">${w}</button>`
+    ).join('');
+    box.querySelectorAll('.chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        // tanlangan so'zni bankka qaytaramiz
+        const idx = exerciseChosen.lastIndexOf(chip.dataset.word);
+        exerciseChosen.splice(idx, 1);
+        document.querySelectorAll(`#wordBank .chip[data-word="${chip.dataset.word}"]`).forEach((c) => c.classList.remove('selected'));
+        renderPracticeAnswer();
+      });
+    });
+  }
+  const feedback = document.getElementById('practiceFeedback');
+  if (feedback && feedback.classList.contains('ok')) {
+    feedback.textContent = '';
+    feedback.className = 'practice-feedback';
+  }
+}
+
+document.getElementById('resetPractice').addEventListener('click', shuffleExercise);
+document.getElementById('checkPractice').addEventListener('click', () => {
+  const feedback = document.getElementById('practiceFeedback');
+  const ok = exerciseChosen.length === EXERCISE.answer.length
+    && exerciseChosen.every((w, i) => w === EXERCISE.answer[i]);
+  if (ok) {
+    feedback.textContent = 'To‘g‘ri! Barakalla 🎉';
+    feedback.className = 'practice-feedback ok';
+  } else {
+    feedback.textContent = 'Noto‘g‘ri tartib — qayta urinib ko‘ring.';
+    feedback.className = 'practice-feedback err';
+  }
+});
+shuffleExercise();
+
+// ---------- Navigatsiya ----------
+document.querySelectorAll('.nav button').forEach((btn) => btn.addEventListener('click', () => {
+  document.querySelectorAll('.nav button').forEach((b) => b.classList.toggle('active', b === btn));
+  const view = btn.dataset.view;
+  document.querySelectorAll('.page-view').forEach((v) => { v.hidden = v.id !== 'view-' + view; });
+  window.scrollTo({ top: 0 });
+}));
+el('seeAllLessons').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.querySelector('.nav button[data-view="lessons"]').click();
+});
+
+// ---------- Yorug'/Tungi rejim (faqat profil ichida) ----------
+function paintTheme() {
+  if (!window.SolTheme) return;
+  const dark = SolTheme.current() === 'dark';
+  el('themeLabel').textContent = dark ? 'Kunduzgi rejim' : 'Tungi rejim';
+  el('themeIcon').textContent = dark ? '☀️' : '🌙';
+  el('itemTheme').title = dark ? 'Kunduzgi rejimga o‘tish' : 'Tungi rejimga o‘tish';
+}
+el('itemTheme').addEventListener('click', () => {
+  if (window.SolTheme) SolTheme.toggle();
+  paintTheme();
+});
+paintTheme();
+
+// ---------- Progress ----------
+async function loadProgress() {
+  try {
+    progress = await authFetch('/api/progress');
+  } catch {
+    progress = { completedDays: [], trialDone: false, totalDays: TOTAL_DAYS };
+  }
+  paintJourney();
+  paintProfile();
+}
+
+// ---------- To'lov ----------
+function formatCard(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  return digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+}
+
+function escPrice(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n.toLocaleString('uz-UZ') : String(value);
+}
+
+function planList() {
+  return paymentInfo && Array.isArray(paymentInfo.plans) && paymentInfo.plans.length
+    ? paymentInfo.plans
+    : FALLBACK_PLANS;
+}
+
+function renderPlans() {
+  const box = el('payPlans');
+  const plans = planList();
+  if (!plans.some((p) => p.months === selectedPlan)) selectedPlan = plans[0].months;
+  box.innerHTML = plans.map((p) => `
+    <button type="button" class="pay-plan ${p.months === selectedPlan ? 'active' : ''}" data-plan="${p.months}">
+      <b>${p.months} oylik</b><small>${p.days} kun</small><span>${p.price ? escPrice(p.price) + ' so‘m' : 'XXX so‘m'}</span>
+    </button>`).join('');
+  box.querySelectorAll('[data-plan]').forEach((btn) => btn.addEventListener('click', () => {
+    selectedPlan = Number(btn.dataset.plan);
+    box.querySelectorAll('.pay-plan').forEach((x) => x.classList.toggle('active', x === btn));
+  }));
+}
+
+async function loadPaymentInfo() {
+  try {
+    paymentInfo = await authFetch('/api/payment-info');
+    el('payCardNumber').textContent = formatCard(paymentInfo.card);
+    el('payHolder').textContent = paymentInfo.holder || 'SprichDe';
+  } catch {
+    el('payCardNumber').textContent = formatCard('9860170110162592');
+    el('payHolder').textContent = 'SprichDe';
+  }
+  renderPlans();
+}
+
+async function loadPayments() {
+  try {
+    const data = await authFetch('/api/payments/me');
+    latestPayment = data.latest || null;
+  } catch {}
+  paintPremium();
+  paintPaymentStatus();
+}
+
+function paintPaymentStatus() {
+  const box = el('payStatus');
+  if (!box) return;
+  if (!latestPayment) {
+    box.className = 'pay-status';
+    box.textContent = '';
+    return;
+  }
+  const names = { pending: 'Kutilmoqda', paid: 'Tasdiqlangan', rejected: 'Rad etilgan' };
+  box.className = 'pay-status show ' + (latestPayment.status === 'paid' ? 'ok' : 'warn');
+  box.textContent = `Oxirgi to‘lov: ${latestPayment.months} oylik — ${names[latestPayment.status] || latestPayment.status}.`;
+}
+
+function openPayment() {
+  el('payBg').hidden = false;
+  document.body.style.overflow = 'hidden';
+  renderPlans();
+  paintPaymentStatus();
+  paintPremium();
+}
+
+function closePayment() {
+  el('payBg').hidden = true;
+  document.body.style.overflow = '';
+}
+
+el('premiumCard').addEventListener('click', openPayment);
+el('premiumCard').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPayment(); }
+});
+el('payClose').addEventListener('click', closePayment);
+el('payBg').addEventListener('click', (e) => { if (e.target === el('payBg')) closePayment(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !el('payBg').hidden) closePayment();
+});
+
+document.querySelectorAll('#payMethods button').forEach((btn) => btn.addEventListener('click', () => {
+  selectedMethod = btn.dataset.method;
+  document.querySelectorAll('#payMethods button').forEach((b) =>
+    b.classList.toggle('active', b === btn));
+}));
+
+el('payCopy').addEventListener('click', async () => {
+  const card = String(paymentInfo?.card || '9860170110162592').replace(/\D/g, '');
+  try {
+    await navigator.clipboard.writeText(card);
+    const btn = el('payCopy');
+    btn.textContent = 'Nusxalandi ✓';
+    setTimeout(() => { btn.textContent = 'Nusxalash'; }, 1800);
+  } catch {
+    prompt('Karta raqami:', card);
+  }
+});
+
+el('paySubmit').addEventListener('click', async () => {
+  const btn = el('paySubmit');
+  const box = el('payStatus');
+  btn.disabled = true;
+  box.className = 'pay-status show warn';
+  box.textContent = 'Yuborilmoqda…';
+  try {
+    const res = await authFetch('/api/payments', {
+      method: 'POST',
+      body: JSON.stringify({
+        months: selectedPlan,
+        method: selectedMethod,
+        payerCard: el('payPayer').value.replace(/\D/g, ''),
+      }),
+    });
+    latestPayment = res.payment;
+    el('payPayer').value = '';
+    box.className = 'pay-status show ok';
+    box.textContent = res.message || 'To‘lov so‘rovi yuborildi. Admin tasdiqlashini kuting.';
+    paintPremium();
+    paintPaymentStatus();
+  } catch (err) {
+    box.className = 'pay-status show warn';
+    box.textContent = err.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// ---------- Ilovani o'rnatish (PWA) ----------
+(function initInstall() {
+  const btn = el('itemInstall');
+  if (!btn) return;
+  const sync = () => {
+    const pwa = window.SprichdePWA;
+    btn.hidden = !pwa || pwa.isStandalone();
+  };
+  sync();
+  document.addEventListener('DOMContentLoaded', sync);
+  window.addEventListener('load', sync);
+  document.addEventListener('pwa:installable', sync);
+  document.addEventListener('pwa:installed', sync);
+
+  btn.addEventListener('click', async () => {
+    const pwa = window.SprichdePWA;
+    if (!pwa) return;
+    if (pwa.canInstall()) {
+      const ok = await pwa.install();
+      if (ok) btn.hidden = true;
+      return;
+    }
+    if (pwa.isIOS()) {
+      alert('iPhone/iPad: Safari’da pastdagi «Ulashish» ⬆️ belgisini bosing, so‘ng «Bosh ekranga qo‘shish»ni tanlang.');
+      return;
+    }
+    alert('Brauzer menyusidan «Ilovani o‘rnatish» yoki «Bosh ekranga qo‘shish»ni tanlang.');
+  });
+})();
+
+// ---------- Profil: chiqish, parol, ism ----------
+el('itemLogout').addEventListener('click', logout);
+
+el('itemPassword').addEventListener('click', async () => {
+  const current = prompt('Joriy parolingizni kiriting:');
+  if (current === null) return;
+  const next = prompt('Yangi parolni kiriting (kamida 6 belgi):');
+  if (next === null) return;
+  if (next.length < 6) {
+    alert('Yangi parol kamida 6 belgidan iborat bo‘lsin.');
+    return;
+  }
+  try {
+    await authFetch('/api/me/password', {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword: current, newPassword: next }),
+    });
+    alert('Parol muvaffaqiyatli o‘zgartirildi.');
+  } catch (err) {
+    alert(err.message);
+  }
+});
+
+el('editProfileBtn').addEventListener('click', async () => {
+  const value = prompt('Yangi ism-familiyani kiriting:', profile?.fullName || '');
+  if (value === null) return;
+  const name = value.trim();
+  if (name.length < 2) {
+    alert('Ism-familiyani to‘liq kiriting.');
+    return;
+  }
+  try {
+    const res = await authFetch('/api/me', {
+      method: 'PATCH',
+      body: JSON.stringify({ fullName: name }),
+    });
+    profile = res.profile;
+    const auth = getAuth();
+    if (auth) setAuth({ ...auth, profile });
+    paintUser();
+    paintProfile();
+  } catch (err) {
+    alert(err.message);
+  }
+});
+
+// ---------- Ishga tushirish ----------
+(async function initDashboard() {
+  const me = await guard('student');
+  if (!me) return;
+  profile = me.profile;
+  paintUser();
+  paintProfile();
+
+  await Promise.all([loadProgress(), loadPaymentInfo(), loadPayments()]);
+  paintJourney();
+  paintProfile();
+})();
+
+</script>
+</body>
+</html>

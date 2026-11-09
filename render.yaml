@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: sprichde-demo
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python backend/server.py"
+    envVars:
+      - key: SPRICHDE_HOST
+        value: 0.0.0.0
+      - key: SPRICHDE_PORT
+        value: 10000
+      - key: SPRICHDE_OPEN
+        value: none

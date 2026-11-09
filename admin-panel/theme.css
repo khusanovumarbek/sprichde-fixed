@@ -1,0 +1,51 @@
+/* ============================================================
+ * SprichDe — Tungi rejim (dark theme) qo'shimcha uslublari
+ * Oq fon o'rniga to'q ko'k, qora matnlar o'rniga #fff.
+ * Har bir sahifada <link rel="stylesheet" href="theme.css"> bilan ulanadi.
+ * ============================================================ */
+
+:root {
+  /* Yorug' rejim o'zgaruvchilari (sahifa CSS'i ham shularni ishlatadi) */
+  --bg:        #f7f8fc;
+  --surface:   #ffffff;
+  --surface-2: #f2f5fb;   /* yumshoq fon (karta ustidagi bloklar) */
+  --text:      #1c2434;
+  --muted:     #788196;
+  --line:      #e9ebf2;
+  --primary:   #3157a4;
+  --primary-2: #24417f;
+  --soft:      #e7efff;   /* och ko'k orqa fon (ikonka kvadratchalari) */
+  --soft-2:    #eef3ff;   /* accent karta foni */
+  --soft-line: #dfe8ff;
+  --shadow:    0 10px 26px #1d2b4b0f;
+}
+
+/* ---------------- TUNGI REJIM ---------------- */
+html[data-theme="dark"] {
+  --bg:        #0f1b33;   /* to'q ko'k fon */
+  --surface:   #16243f;   /* karta foni */
+  --surface-2: #1b2b49;
+  --text:      #ffffff;   /* matn — oq */
+  --muted:     #9fb0cc;   /* ikkinchi darajali matn */
+  --line:      #253757;
+  --primary:   #4f7dd6;   /* yorqinroq ko'k (tungi fonda ko'rinadi) */
+  --primary-2: #3a63b0;
+  --soft:      #1e3054;
+  --soft-2:    #1b2b49;
+  --soft-line: #294067;
+  --shadow:    0 10px 26px #00000045;
+}
+
+html[data-theme="dark"] body {
+  background: var(--bg) !important;
+  color: var(--text);
+}
+
+/* Umumiy matn ranglari */
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] b,
+html[data-theme="dark"] strong { color: var(--text); }
+
+/* Rejim tugmasi faqat profil ichida; burchakdagi toggle olib tashlangan */
